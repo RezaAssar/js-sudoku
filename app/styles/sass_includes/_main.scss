@@ -1,0 +1,113 @@
+*, *:before, *:after {
+  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+ }
+
+.clearfix:after, section:after, #board:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+body {
+  font-family:$fontMain;
+  font-weight:$fontWeight;
+  color:$text;
+  background:$main;
+  position:absolute;
+  overflow:hidden;
+  width:100%;
+  height:100%;
+  text-align:center;
+}
+
+h1,h2,h3,h4,h5,h6,strong{font-weight:$fontWeight;text-transform:uppercase;}
+
+h1 {text-align:center;letter-spacing: 3px;display:none;}
+
+
+
+/*Board*/
+
+.wrapper{
+  position: relative;
+  display: inline-block;
+  height: 100%;
+}
+
+.wrapper > img {
+  height: 100%;
+}
+#board {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height:100%;
+  padding:5%;
+}
+
+section {
+  border:1px solid $main;
+}
+
+section,.tile {
+  width:33.3%;
+  float:left;
+}
+
+.tile{
+  position:relative;
+  padding-top:33.3%;
+  border:1px solid $mainDark;
+  perspective : 1000;
+  z-index:1;
+
+  &:hover , &.hover {
+    z-index:2;
+    .tile-wrapper {
+      transform: rotateY(180deg) scale(1.5);
+      z-index:5;
+      box-shadow:0 0 3px 1px rgba(0,0,0,.2);
+    }
+  }
+
+  .tile-wrapper {
+    transition: transform 0.6s $transitionFunction;
+    transform-style: preserve-3d;
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    box-shadow:0 0 0 0 rgba(0,0,0,.3);
+  }
+
+  .front,.back {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    line-height:100%;
+    /*TODO include mixin, or add this property to grunt sass process*/
+    -webkit-backface-visibility:hidden;
+    transition:none;
+  }
+
+
+  .front {
+    background:$highlight;
+    z-index:2;
+  }
+
+  .back {
+    background:white;
+    transform: rotateY(180deg);
+  }
+
+}
+
