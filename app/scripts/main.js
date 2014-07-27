@@ -1,6 +1,26 @@
 var sudoku = sudoku || {};
 
-(function(){
+function Game(){
+  this.board = new Board();
+};
+
+Game.prototype.init = function(){
+  this.board.generate();
+  this.board.userEvents();
+  for (var c = 0; c < 9; c++){
+    this.board.rows[c] = $(".tile[data-row='" + c +"']");
+    this.board.cols[c] = $('.tile[data-col="' + c +'"]');
+    this.board.secs[c] = $('.tile[data-sec="' + c +'"]');
+  };
+};
+
+function Board (){
+    this.rows = [];
+    this.cols = [];
+    this.secs = [];
+};
+
+Board.prototype.generate = function(){
     var x = 0,
         y = 0,
         cell = 0,
@@ -11,10 +31,7 @@ var sudoku = sudoku || {};
         current_col = 0,
         current_sec = 0,
         z = 0,
-        a = 0,
-        rows = [],
-        cols = [],
-        secs = [];
+        a = 0;
 
     for(;x < 9;x ++){
         section_string = '<section>';
@@ -23,7 +40,7 @@ var sudoku = sudoku || {};
             current_row = (Math.floor(x / 3) * 3) + (Math.floor(y / 3));
             current_col = z + (a * 3);
             z = (z < 2) ? z + 1 : 0;
-            section_string += '<div data-row="' + current_row + '" data-col="' + current_col + '" data-sec="' + current_sec + '" class="tile" id="cell' + cell +'"><div class="tile-wrapper"><div class="front"></div><div class="back">'+ backHTML + '</div></div></div>';
+            section_string += '<div data-row="' + current_row + '" data-col="' + current_col + '" data-sec="' + current_sec + '" class="tile" id="cell' + cell +'"><div class="tile-wrapper"><div class="front"><div class="front-wrapper"></div></div><div class="back">'+ backHTML + '</div></div></div>';
             cell++;
         }
         y = 0;
@@ -33,38 +50,38 @@ var sudoku = sudoku || {};
     }
 
     $('#board').html(board_string);
-    $('#wrapper').css('width', $('img').width());
+};
 
-    for (var c = 0; c < 9; c++){
-        rows[c] = $(".tile[data-row='" + c +"']");
-        cols[c] = $('.tile[data-col="' + c +'"]');
-        secs[c] = $('.tile[data-sec="' + c +'"]');
+Board.prototype.userEvents = function(){
+    var _board = this;
+    function removeFrom(type, idx, val) {
+        _board[type][idx].each(function(){
+            $(this).find('.digitBtn' + val).addClass('disabled');
+        })
     };
 
     $('.digitBtn').click(function(){
-       var $t = $(this);
-       if(!$t.hasClass('disabled')) {
-           var val = $t.data('value'),
-               tile = $t.parents('.tile'),
-               cur_row = parseFloat(tile.data('row')),
-               cur_sec = parseFloat(tile.data('sec')),
-               cur_col = parseFloat(tile.data('col'));
+        var $t = $(this);
+        if(!$t.hasClass('disabled')) {
+            var val = $t.data('value'),
+                tile = $t.parents('.tile'),
+                cur_row = parseFloat(tile.data('row')),
+                cur_sec = parseFloat(tile.data('sec')),
+                cur_col = parseFloat(tile.data('col'));
 
-           rows[cur_row].each(function(){
-               $(this).find('.digitBtn' + val).addClass('disabled');
-           });
+            removeFrom('rows', cur_row, val);
+            removeFrom('cols', cur_col, val);
+            removeFrom('secs', cur_sec, val);
 
-           cols[cur_col].each(function(){
-               $(this).find('.digitBtn' + val).addClass('disabled');
-           });
-
-           secs[cur_sec].each(function(){
-               $(this).find('.digitBtn' + val).addClass('disabled');
-           });
-           tile.find('.front').text(val);
-       }
+            tile.find('.front-wrapper').text(val);
+        }
     });
+};
 
+(function(){
+    $('#wrapper').css('width', $('img').width());
+    var game = new Game();
+    game.init();
 })();
 
 
