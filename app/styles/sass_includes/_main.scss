@@ -75,7 +75,7 @@ section,.tile {
   perspective : 1000;
   z-index:1;
 
-  &:hover , &.hover {
+  &.active {
     z-index:2;
     .tile-wrapper {
       transform: rotateY(180deg) scale(1.5);
