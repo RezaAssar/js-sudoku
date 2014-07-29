@@ -63,12 +63,12 @@ section {
   border:1px solid $main;
 }
 
-section,.tile {
+section,.cell {
   width:33.3%;
   float:left;
 }
 
-.tile{
+.cell{
   position:relative;
   padding-top:33.3%;
   border:1px solid $mainDark;
@@ -77,14 +77,14 @@ section,.tile {
 
   &.active {
     z-index:2;
-    .tile-wrapper {
+    .cell-wrapper {
       transform: rotateY(180deg) scale(1.5);
       z-index:5;
       box-shadow:0 0 3px 1px rgba(0,0,0,.2);
     }
   }
 
-  .tile-wrapper {
+  .cell-wrapper {
     transition: transform 0.6s $transitionFunction;
     transform-style: preserve-3d;
     position:absolute;

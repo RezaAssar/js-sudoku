@@ -2,7 +2,8 @@
   "name": "sudoku",
   "version": "0.0.0",
   "dependencies": {
-    "grunt": "~0.4.5"
+    "grunt": "~0.4.5",
+    "grunt-wiredep": "~1.8.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
