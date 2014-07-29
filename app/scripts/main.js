@@ -71,14 +71,14 @@ Board.prototype.ui = function(){
             a = 0;
 
         for(;x < 9;x ++){
-            sectionString = '<section>';
+            sectionString = '<section data-section="'+ x +'">';
 
             for(;y < 9;y++){
                 current_row = (Math.floor(x / 3) * 3) + (Math.floor(y / 3));
                 current_col = z + (a * 3);
                 cell = (current_row * 9) + current_col;
                 z = (z < 2) ? z + 1 : 0;
-                sectionString += '<div id="'+cell+'" class="cell" data-idx="' + cell +'"><div class="cell-wrapper"><div class="front"><div class="front-wrapper"></div></div><div class="back">'+ digitPicker+ '</div></div></div>';
+                sectionString += '<div id="'+cell+'" data-row="' + current_row + '" data-col="' + current_col + '" class="cell" data-idx="' + cell +'"><div class="cell-wrapper"><div class="front"><div class="front-wrapper"></div></div><div class="back">'+ digitPicker+ '</div></div></div>';
             }
             y = 0;
             a = (a < 2) ? a + 1 : 0;
@@ -87,14 +87,32 @@ Board.prototype.ui = function(){
         }
 
         return boardString;
+
+    }
+
+    function updateDigitPicker($cell, val){
+        var siblings = {
+            col : $('.cell[data-col="' + $cell.attr('data-col') + '"]'),
+            row : $('.cell[data-row="' + $cell.attr('data-row') + '"]'),
+            sec : $cell.parents('section').find('.cell')
+        };
+
+        for (var sibling in siblings) {
+            siblings[sibling].each(function(){
+               $(this).find('.digitBtn' + val).addClass('disabled');
+            });
+        }
     }
 
     function update(e, data){
-        var x = 0, len = data.cells.length;
+        var x = 0, len = data.cells.length,
+            $cell, val;
         for(;x < len;x++) {
-            $('#' + data.cells[x])
-                .addClass(data.initial ? 'initialValue' : '')
-                .find('.front-wrapper').text(_board.userValues[data.cells[x]]);
+            $cell = $('#' + data.cells[x]);
+            val = _board.userValues[data.cells[x]];
+            $cell.addClass(data.initial ? 'initialValue' : '')
+                 .find('.front-wrapper').text(val);
+            updateDigitPicker($cell, val);
         }
     }
 
