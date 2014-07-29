@@ -1,31 +1,47 @@
+
 function Game(){
   this.board = new Board();
 };
 
 Game.prototype.init = function(){
-  this.board.generate();
-  this.board.userEvents();
-  for (var c = 0; c < 9; c++){
-    this.board.rows[c] = $(".tile[data-row='" + c +"']");
-    this.board.cols[c] = $('.tile[data-col="' + c +'"]');
-    this.board.secs[c] = $('.tile[data-sec="' + c +'"]');
-  };
+  var _game = this;
+  _game.board.ui = _game.board.ui();
+  _game.board.events();
+
+  $.getJSON('/scripts/boards.json').done(function(data){
+      b = data.boards[Math.floor(Math.random() * (data.boards.length - 1))];
+    _game.board.loadData(b);
+  });
 };
 
 function Board (){
-    this.rows = [];
-    this.cols = [];
-    this.secs = [];
-    this.tileValues = [];
+    this.values = [];
+    this.userValues = [];
 };
 
-Board.prototype.generate = function(){
+Board.prototype.loadData = function(data){
+  var _board = this;
+  _board.values = data;
+  $(window).trigger('valuesUpdated', {
+      cells : [5, 10, 16],
+      initial : true
+    });
+};
+
+Board.prototype.ui = function(){
     var x = 0,
         y = 0,
         cell = 0,
+        $cells,
         section_string = '',
         board_string = '',
-        backHTML = generateBackHtml(),
+        digitPicker = function(){
+            var html = '';
+            for (var x = 1; x <= 9;x++){
+                html += '<span class="digitBtn digitBtn' + x + '" data-value="'+ x + '"><span class="digit">' + x +  '</span></span>';
+            }
+            return html;
+        },
         current_row = 0,
         current_col = 0,
         current_sec = 0,
@@ -33,12 +49,16 @@ Board.prototype.generate = function(){
         a = 0,
         _board = this;
 
-    function generateBackHtml(){
-        var html = '';
-        for (var x = 1; x <= 9;x++){
-            html += '<span class="digitBtn digitBtn' + x + '" data-value="'+ x + '"><span class="digit">' + x +  '</span></span>';
+    function update(e, data){
+        var x = 0, len = data.cells.length;
+        console.log(data.cells)
+        console.log(data.initial)
+        for(;x < len;x++) {
+            console.log(data.cells[x]);
+            $cells.eq(data.cells[x])
+                /*.addClass(initial ? 'intialValue' : '')*/
+                .find('.front-wrapper').text(_board.userValues[data.cells[x]]);
         }
-        return html;
     }
 
     for(;x < 9;x ++){
@@ -48,9 +68,8 @@ Board.prototype.generate = function(){
             current_row = (Math.floor(x / 3) * 3) + (Math.floor(y / 3));
             current_col = z + (a * 3);
             z = (z < 2) ? z + 1 : 0;
-            section_string += '<div data-row="' + current_row + '" data-col="' + current_col + '" data-sec="' + current_sec + '" class="tile" data-idx="' + cell +'"><div class="tile-wrapper"><div class="front"><div class="front-wrapper"></div></div><div class="back">'+ backHTML + '</div></div></div>';
+            section_string += '<div id="'+cell+'" class="tile" data-idx="' + cell +'"><div class="tile-wrapper"><div class="front"><div class="front-wrapper"></div></div><div class="back">'+ digitPicker() + '</div></div></div>';
             cell++;
-            _board.tileValues.push(null);
         }
         y = 0;
         a = (a < 2) ? a + 1 : 0;
@@ -59,74 +78,45 @@ Board.prototype.generate = function(){
     }
 
     $('#board').html(board_string);
+    $cells = $('.tile');
+    return {
+        update : update
+    }
 };
 
-Board.prototype.userEvents = function(){
+Board.prototype.events = function(){
     var _board = this,
         active_event = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click';
-
-    function removeFrom(type, idx, val) {
-        _board[type][idx].each(function(){
-            $(this).find('.digitBtn' + val).addClass('disabled');
-        });
-    };
-
-    function addTo(type, idx, val){
-        _board[type][idx].each(function(){
-            $(this).find('.digitBtn' + val).addClass('disabled');
-        });
-    }
 
     function onResize() {
         $('#wrapper').css('width', $('img').width());
     };
 
-    function onBoardChange(evt) {
-      if(_board.tileValues[evt.idx] == null) {
-            removeFrom('rows', evt.cur_row, evt.val);
-            removeFrom('cols', evt.cur_col, evt.val);
-            removeFrom('secs', evt.cur_sec, evt.val);
-            _board.tileValues[evt.idx] = evt.val;
-            evt.$tile.find('.front-wrapper').text(evt.val);
-      } else {
-          addTo('rows', evt.cur_row, evt.val);
-          addTo('cols', evt.cur_col, evt.val);
-          addTo('secs', evt.cur_sec, evt.val);
-      }
-    };
-
-    $('.tile').on(active_event, function(){
-       var $t = $(this);
-
+    function onTileClick(e){
+        var $t = $(e.currentTarget);
         if(!$t.hasClass('active')){
             $('.active').removeClass('active');
             $t.addClass('active');
         } else {
             $('.active').removeClass('active');
         }
-    });
+    }
 
-    $('.digitBtn').on(active_event, function(){
-        var $t = $(this),
+    function onNumberSelect(e){
+        var $t = $(e.currentTarget),
             $tile = $t.parents('.tile');
 
         if(!$t.hasClass('disabled')) {
-            data = {
-                $el: $t,
-                idx: parseFloat($tile.attr('data-idx')),
-                val: $t.data('value'),
-                $tile: $tile,
-                cur_row: parseFloat($tile.data('row')),
-                cur_sec: parseFloat($tile.data('sec')),
-                cur_col: parseFloat($tile.data('col'))
-            };
-            onBoardChange(data);
+            var cellIdx = parseFloat($tile.attr('data-idx'));
+            _board.userValues[cellIdx] = $t.data('value');
+            $(window).trigger('valuesUpdated', [cellIdx]);
         }
-    });
+    };
 
-    $(window).on('resize', function(){
-       onResize();
-    });
+    $('.tile').on(active_event, onTileClick);
+    $('.digitBtn').on(active_event, onNumberSelect);
+    $(window).on('resize', onResize)
+             .on('valuesUpdated', _board.ui.update);
 
 };
 
