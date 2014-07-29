@@ -49,8 +49,16 @@ Board.prototype.loadData = function(data){
 };
 
 Board.prototype.ui = function(){
-
-    var _board = this;
+    function mdArray(dims) {
+        var arr = [];
+        return arr
+    }
+    var _board = this,
+        uiVals = {
+            row : mdArray(9,9),
+            col : mdArray(9,9),
+            sec : mdArray(9,9)
+        };
 
     function build(){
         var x = 0,
@@ -65,8 +73,8 @@ Board.prototype.ui = function(){
                 }
                 return html;
             })(),
-            current_row = 0,
-            current_col = 0,
+            currentRow = 0,
+            currentCol = 0,
             z = 0,
             a = 0;
 
@@ -74,11 +82,11 @@ Board.prototype.ui = function(){
             sectionString = '<section data-section="'+ x +'">';
 
             for(;y < 9;y++){
-                current_row = (Math.floor(x / 3) * 3) + (Math.floor(y / 3));
-                current_col = z + (a * 3);
-                cell = (current_row * 9) + current_col;
+                currentRow = (Math.floor(x / 3) * 3) + (Math.floor(y / 3));
+                currentCol = z + (a * 3);
+                cell = (currentRow * 9) + currentCol;
                 z = (z < 2) ? z + 1 : 0;
-                sectionString += '<div id="'+cell+'" data-row="' + current_row + '" data-col="' + current_col + '" class="cell" data-idx="' + cell +'"><div class="cell-wrapper"><div class="front"><div class="front-wrapper"></div></div><div class="back">'+ digitPicker+ '</div></div></div>';
+                sectionString += '<div id="'+cell+'" data-row="' + currentRow + '" data-col="' + currentCol + '" class="cell" data-idx="' + cell +'"><div class="cell-wrapper"><div class="front"><div class="front-wrapper"></div></div><div class="back">'+ digitPicker+ '</div></div></div>';
             }
             y = 0;
             a = (a < 2) ? a + 1 : 0;
@@ -91,11 +99,21 @@ Board.prototype.ui = function(){
     }
 
     function updateDigitPicker($cell, val){
+        var col = $cell.attr('data-col'),
+            row = $cell.attr('data-row'),
+            sec = $cell.parents('section').attr('data-section'),
+            idx = $cell.index();
+
         var siblings = {
-            col : $('.cell[data-col="' + $cell.attr('data-col') + '"]'),
-            row : $('.cell[data-row="' + $cell.attr('data-row') + '"]'),
+            col : $('.cell[data-col="' + col + '"]'),
+            row : $('.cell[data-row="' + row  + '"]'),
             sec : $cell.parents('section').find('.cell')
         };
+
+//        uiVals['col'][col][row] = val;
+//        uiVals['row'][row][col] = val;
+//        uiVals['sec'][sec][idx] = val;
+        console.log(uiVals);
 
         for (var sibling in siblings) {
             siblings[sibling].each(function(){
