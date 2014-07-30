@@ -16,6 +16,8 @@
     height: 0;
 }
 
+html{font-size:62.5%;}
+
 body {
   font-family:$fontMain;
   font-weight:$fontWeight;
@@ -48,6 +50,7 @@ header {
     float:left;
     line-height:60px;
     margin:0;
+    font-size:3em;
   }
   .btn {
     float:right;
@@ -60,7 +63,9 @@ header {
     padding:0 20px;
     font-size:14px;
     letter-spacing:3px;
-    text-transform:uppercase
+    text-transform:uppercase;
+    transition:border-color .6s;
+    &:hover {border-color:$highlight;cursor:pointer;}
   }
 
 }
@@ -114,9 +119,22 @@ section,.cell {
     }
   }
 
+  &:hover, &.selected {
+    .front {
+      background:$highlightDark;
+    }
+
+  }
+
   &.error {
     .front {
       background:indianred;
+    }
+  }
+
+  &.error:hover, &.error.selected{
+    .front {
+      background:#973636;
     }
   }
 
@@ -142,19 +160,24 @@ section,.cell {
     -moz-backface-visibility:hidden;
     backface-visibility:hidden;
     transition:none;
+    display:table;
   }
 
 
   .front {
     background:$highlight;
+    transition:background .6s;
     z-index:2;
     .front-wrapper {
-      position:absolute;
+      position:relative;
       width:100%;
       height:100%;
       top:0;
       left:0;
       width:100%;
+      display:table-cell;
+      vertical-align: middle;
+      font-size:3rem;
     }
   }
 
@@ -165,10 +188,24 @@ section,.cell {
     .digitBtn {
       float:left;
       width:33.3%;
-      padding-top:33.3%;
+      padding-top:33.3333%;
       cursor:pointer;
       position:relative;
-      .digit {position:absolute;top:0;left:0;height:100%;width:100%;line-height:100%;text-align:center;color:#000;}
+      &:hover{background:$neutral2}
+      .digit {
+        position:absolute;
+        top:0;
+        left:0;
+        margin:auto;
+        top:0;
+        left:0;
+        bottom:0;
+        right:0;
+        width:100%;
+        height:50%;
+        text-align:center;
+        color:#000;
+      }
       &.disabled {
         cursor:default;
         .digit{opacity:0}

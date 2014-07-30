@@ -1,7 +1,6 @@
 @media only screen and (orientation : portrait) {
   img {display:none}
   .wrapper{width:100%;height:auto;}
-
 }
 
 @media only screen
@@ -14,5 +13,13 @@ and (orientation : portrait) {
     margin-left:-75px;
     width:150px;
     text-align:center;
+  }
+
+}
+
+@media only screen
+and (max-width : 480px) {
+  .cell .front .front-wrapper {
+    font-size:2rem;
   }
 }

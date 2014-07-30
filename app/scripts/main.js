@@ -65,7 +65,8 @@ Board.prototype.solve = function(){
 
 Board.prototype.ui = function(){
 
-    var _board = this;
+    var _board = this,
+        highlightedCell = null;
 
     function build(){
         var x = 0,
@@ -108,6 +109,8 @@ Board.prototype.ui = function(){
     function showErrors(){
         var x = 0,
             len = _board.userValues.length;
+
+        $('.cell').removeClass('error');
         for(;x < len; x++) {
             if(_board.userValues[x] != _board.values[x]) {
                 $('#' + x).addClass('error');
@@ -126,12 +129,43 @@ Board.prototype.ui = function(){
         }
     }
 
+    function hightlightCell(idx, isMouseEvent){
+        if(highlightedCell === null) {
+            highlightedCell = isMouseEvent ? idx : 0;
+        } else if (isMouseEvent) {
+            highlightedCell = idx;
+        } else {
+            highlightedCell += idx;
+            if(highlightedCell > 80 || highlightedCell < 0) {
+                highlightedCell -= idx;
+            }
+        }
+
+
+        $('.cell.selected').removeClass('selected');
+        $('#' + highlightedCell).addClass('selected');
+    }
+
     $('#board').html(build());
 
     return {
         update : update,
-        showErrors : showErrors
-    };
+        showErrors : showErrors,
+        hightlightCell : function(idx, isMouseEvent){
+            hightlightCell(idx, isMouseEvent)
+        },
+        selectCell : function() {
+            if(highlightedCell !== null) {
+                $('#' + highlightedCell).click();
+            }
+        },
+        selectDigit : function(digit){
+            console.log(digit)
+            if(highlightedCell !== null) {
+                $('#' + highlightedCell).click().find('.digitBtn' + digit).click();
+            }
+        }
+    }
 };
 
 Board.prototype.events = function(){
@@ -145,6 +179,53 @@ Board.prototype.events = function(){
         img.offsetHeight;
         img.style.display = 'block';
         $('img').css('height', '100%');
+    }
+
+    function onKeyDown(e){
+        var event = window.event ? window.event : e,
+            key = event.keyCode,
+            moveAmt;
+
+        if(key > 36 && key < 41) {
+            switch(key) {
+                case 37:
+                    moveAmt = -1
+                    break;
+                case 38:
+                    moveAmt = -9
+                    break;
+                case 39:
+                    moveAmt = 1
+                    break;
+                case 40:
+                    moveAmt = 9
+                    break;
+                default:
+                    moveAmt = 0;
+            }
+            _board.ui.hightlightCell(moveAmt);
+        } else if (key === 13) {
+            _board.ui.selectCell();
+        } else if (key == 49 || key == 97){
+            _board.ui.selectDigit(1);
+        } else if (key == 50 || key == 98){
+            _board.ui.selectDigit(2);
+        } else if (key == 51 || key == 99){
+            _board.ui.selectDigit(3);
+        } else if (key == 52 || key == 100){
+            _board.ui.selectDigit(4);
+        } else if (key == 53 || key == 101){
+            _board.ui.selectDigit(5);
+        } else if (key == 54 || key == 102){
+            _board.ui.selectDigit(6);
+        } else if (key == 55 || key == 103){
+            _board.ui.selectDigit(7);
+        } else if (key == 56 || key == 104){
+            _board.ui.selectDigit(8);
+        } else if (key == 57 || key == 105){
+            _board.ui.selectDigit(9);
+        }
+
     }
 
     function newGame(){
@@ -167,7 +248,7 @@ Board.prototype.events = function(){
         var $t = $(e.currentTarget),
             $cell = $t.parents('.cell');
 
-        if(!$t.hasClass('disabled')) {
+        if(!$cell.hasClass('initialValue')) {
             var cellIdx = parseFloat($cell.attr('data-idx'));
             _board.userValues[cellIdx] = $t.data('value');
             $(window).trigger('valuesUpdated', {cells:[cellIdx]});
@@ -179,7 +260,8 @@ Board.prototype.events = function(){
     $('#btnSolve').on(activeEvent, function(){_board.solve()});
     $('#btnNewGame').on(activeEvent, newGame)
     $(window).on('resize', onResize)
-        .on('valuesUpdated', _board.ui.update);
+        .on('valuesUpdated', _board.ui.update)
+        .on('keydown', onKeyDown);
 
 };
 
