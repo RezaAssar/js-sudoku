@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <title>Sudoku</title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <link rel="shortcut icon" href="/favicon.ico">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
         <!-- build:css styles/vendor.css -->
@@ -13,13 +13,18 @@
         <!-- endbower -->
         <!-- endbuild -->
         <!-- build:css(.tmp) styles/main.css -->
-        <link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" href="styles/style.css">
         <!-- endbuild -->
     </head>
     <body>
+        <header>
+            <h1>Judoku</h1>
+            <a class="btn" id="btnSolve">Solve</a>
+            <a class="btn" id="btnNewGame">New Game</a>
+        </header>
 		<div class="wrapper">
-			<h1>Sudoku</h1>
-            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+
+            <img id="sizer" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
             <div id="board"></div>
 		</div>
 		

@@ -1,0 +1,18 @@
+@media only screen and (orientation : portrait) {
+  img {display:none}
+  .wrapper{width:100%;height:auto;}
+
+}
+
+@media only screen
+and (max-width : 480px)
+and (orientation : portrait) {
+  #btnNewGame {
+    position:fixed;
+    bottom:3%;
+    left:50%;
+    margin-left:-75px;
+    width:150px;
+    text-align:center;
+  }
+}

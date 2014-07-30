@@ -9,6 +9,10 @@ function Game(){
     this.board = new Board();
 }
 
+Game.prototype.new = function(){
+  var game = new Game();
+};
+
 Game.prototype.init = function(){
     var _game = this;
     _game.board.ui = _game.board.ui();
@@ -48,17 +52,20 @@ Board.prototype.loadData = function(data){
     });
 };
 
-Board.prototype.ui = function(){
-    function mdArray(dims) {
-        var arr = [];
-        return arr
+Board.prototype.solve = function(){
+    var _board = this;
+    
+    if(_board.userValues === _board.values) {
+        alert('you win');
+    } else {
+        alert('you lose');
+        _board.ui.showErrors();
     }
-    var _board = this,
-        uiVals = {
-            row : mdArray(9,9),
-            col : mdArray(9,9),
-            sec : mdArray(9,9)
-        };
+}
+
+Board.prototype.ui = function(){
+
+    var _board = this;
 
     function build(){
         var x = 0,
@@ -98,27 +105,13 @@ Board.prototype.ui = function(){
 
     }
 
-    function updateDigitPicker($cell, val){
-        var col = $cell.attr('data-col'),
-            row = $cell.attr('data-row'),
-            sec = $cell.parents('section').attr('data-section'),
-            idx = $cell.index();
-
-        var siblings = {
-            col : $('.cell[data-col="' + col + '"]'),
-            row : $('.cell[data-row="' + row  + '"]'),
-            sec : $cell.parents('section').find('.cell')
-        };
-
-//        uiVals['col'][col][row] = val;
-//        uiVals['row'][row][col] = val;
-//        uiVals['sec'][sec][idx] = val;
-        console.log(uiVals);
-
-        for (var sibling in siblings) {
-            siblings[sibling].each(function(){
-               $(this).find('.digitBtn' + val).addClass('disabled');
-            });
+    function showErrors(){
+        var x = 0,
+            len = _board.userValues.length;
+        for(;x < len; x++) {
+            if(_board.userValues[x] != _board.values[x]) {
+                $('#' + x).addClass('error');
+            }
         }
     }
 
@@ -130,24 +123,32 @@ Board.prototype.ui = function(){
             val = _board.userValues[data.cells[x]];
             $cell.addClass(data.initial ? 'initialValue' : '')
                  .find('.front-wrapper').text(val);
-            updateDigitPicker($cell, val);
         }
     }
 
     $('#board').html(build());
 
-
     return {
-        update : update
+        update : update,
+        showErrors : showErrors
     };
 };
 
 Board.prototype.events = function(){
     var _board = this,
+        img = $('img').get(0),
         activeEvent = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click';
 
     function onResize() {
-        $('#wrapper').css('width', $('img').width());
+        //hack to make sure the browser repaints inline-block on resize
+        img.style.display = 'none';
+        img.offsetHeight;
+        img.style.display = 'block';
+        $('img').css('height', '100%');
+    }
+
+    function newGame(){
+        location.reload();
     }
 
     function onTileClick(e){
@@ -175,6 +176,8 @@ Board.prototype.events = function(){
 
     $('.cell').on(activeEvent, onTileClick);
     $('.digitBtn').on(activeEvent, onNumberSelect);
+    $('#btnSolve').on(activeEvent, function(){_board.solve()});
+    $('#btnNewGame').on(activeEvent, newGame)
     $(window).on('resize', onResize)
         .on('valuesUpdated', _board.ui.update);
 

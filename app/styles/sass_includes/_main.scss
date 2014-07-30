@@ -27,12 +27,43 @@ body {
   height:100%;
   text-align:center;
   z-index:10;
+  padding:70px 3% 5%;
 }
 
 h1,h2,h3,h4,h5,h6,strong{font-weight:$fontWeight;text-transform:uppercase;}
 
-h1 {text-align:center;letter-spacing: 3px;display:none;}
+header {
+  position:absolute;
+  border-bottom:1px solid $neutral2;
+  height:60px;
+  top:0;
+  left:0;
+  width:100%;
+  text-align:left;
+  padding:0 5%;
 
+  h1 {
+    text-transform:uppercase;
+    letter-spacing: 3px;
+    float:left;
+    line-height:60px;
+    margin:0;
+  }
+  .btn {
+    float:right;
+    height:30px;
+    line-height:30px;
+    margin-top:15px;
+    margin-left:5px;
+    border:1px solid #fff;
+    border-radius:3px;
+    padding:0 20px;
+    font-size:14px;
+    letter-spacing:3px;
+    text-transform:uppercase
+  }
+
+}
 
 
 /*Board*/
@@ -55,7 +86,6 @@ h1 {text-align:center;letter-spacing: 3px;display:none;}
   left: 0;
   right: 0;
   height:100%;
-  padding:5%;
   z-index:10;
 }
 
@@ -81,6 +111,12 @@ section,.cell {
       transform: rotateY(180deg) scale(1.5);
       z-index:5;
       box-shadow:0 0 3px 1px rgba(0,0,0,.2);
+    }
+  }
+
+  &.error {
+    .front {
+      background:indianred;
     }
   }
 
