@@ -27,13 +27,14 @@
       }
     }
 
-    &.active {
+    &.active, &.selected {
+      z-index:100;
       .cell-wrapper {
         -webkit-transform: none;
         transform: none;
       }
       .back {
-        z-index: 2
+        z-index: 200
       }
     }
 
