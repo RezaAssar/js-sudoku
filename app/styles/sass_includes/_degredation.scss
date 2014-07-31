@@ -15,3 +15,7 @@
   }
 
 }
+
+@-moz-document url-prefix() {
+  .wrapper{height:76%;}
+}
