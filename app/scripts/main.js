@@ -9,10 +9,6 @@ function Game(){
     this.board = new Board();
 }
 
-Game.prototype.new = function(){
-  var game = new Game();
-};
-
 Game.prototype.init = function(){
     var _game = this;
     _game.board.ui = _game.board.ui();
