@@ -226,7 +226,10 @@ Board.prototype.events = function(){
     }
 
     function newGame(){
-        location.reload();
+        var r = confirm("Are you sure you want to restart?");
+        if (r == true) {
+            location.reload();
+        }
     }
 
     function onTileClick(e){
