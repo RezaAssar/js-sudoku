@@ -29,7 +29,7 @@ Board.prototype.loadData = function(data){
     _board.userValues = new Array(len);
 
     var num,
-        amt = Math.floor((Math.random() * 10) + 20), //amount of cells to show user
+        amt = Math.floor((Math.random() * 10) + 25), //amount of cells to show user
         randomCell = function(){
             return Math.floor(Math.random() * len);
         },
@@ -51,10 +51,20 @@ Board.prototype.loadData = function(data){
 };
 
 Board.prototype.solve = function(){
-    var _board = this;
+    var _board = this,
+        solved =  true,
+        x = 0,
+        len = _board.userValues.length;
+
+    for(;x < len;x++){
+        if(_board.userValues[x] != _board.values[x]) {
+            solved = false;
+        }
+    }
     
-    if(_board.userValues === _board.values) {
+    if(solved) {
         alert('Congratulations, you win!');
+        _board.ui.showErrors();
     } else {
         alert('Sorry, you have some mistakes.');
         _board.ui.showErrors();
@@ -261,6 +271,7 @@ Board.prototype.events = function(){
     $(window).on('resize', onResize)
         .on('valuesUpdated', _board.ui.update)
         .on('keydown', onKeyDown);
+
 
 };
 
