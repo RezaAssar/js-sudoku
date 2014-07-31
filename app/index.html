@@ -2,7 +2,8 @@
 <html class="no-js">
     <head>
         <meta charset="utf-8">
-        <title>Sudoku</title>
+        <title>Judoku - A Suduko game by Reza Assar, written for the browser</title>
+        <meta name="author" content="Reza Assar | mynd.reza@gmail.com">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <link rel="shortcut icon" href="/favicon.ico">
@@ -10,6 +11,7 @@
         <!-- build:css styles/vendor.css -->
         <!-- bower:css -->
         <link rel="stylesheet" href="../bower_components/normalize-css/normalize.css" />
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
         <!-- endbower -->
         <!-- endbuild -->
         <!-- build:css(.tmp) styles/main.css -->
@@ -19,8 +21,8 @@
     <body>
         <header>
             <h1>Judoku</h1>
-            <a class="btn" id="btnSolve">Solve</a>
-            <a class="btn" id="btnNewGame">New Game</a>
+            <a class="btn" id="btnSolve"><i class="fa fa-check"></i><span>Solve</span></a>
+            <a class="btn" id="btnNewGame"><i class="fa fa-history"></i><span>Restart</span></a>
         </header>
 		<div class="wrapper">
             <img id="sizer" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
@@ -42,6 +44,7 @@
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
             ga('create','UA-XXXXX-X');ga('send','pageview');
         </script> -->
+        <script src="scripts/featureDetection.js"></script>
         <!-- build:js({app,.tmp}) scripts/main.js -->
         <script src="scripts/main.js"></script>
         <!-- endbuild -->

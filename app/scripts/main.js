@@ -56,9 +56,9 @@ Board.prototype.solve = function(){
     var _board = this;
     
     if(_board.userValues === _board.values) {
-        alert('you win');
+        alert('Congratulations, you win!');
     } else {
-        alert('you lose');
+        alert('Sorry, you have some mistakes.');
         _board.ui.showErrors();
     }
 }
@@ -141,7 +141,6 @@ Board.prototype.ui = function(){
             }
         }
 
-
         $('.cell.selected').removeClass('selected');
         $('#' + highlightedCell).addClass('selected');
     }
@@ -160,7 +159,6 @@ Board.prototype.ui = function(){
             }
         },
         selectDigit : function(digit){
-            console.log(digit)
             if(highlightedCell !== null) {
                 $('#' + highlightedCell).click().find('.digitBtn' + digit).click();
             }
@@ -225,7 +223,6 @@ Board.prototype.events = function(){
         } else if (key == 57 || key == 105){
             _board.ui.selectDigit(9);
         }
-
     }
 
     function newGame(){
@@ -241,6 +238,7 @@ Board.prototype.events = function(){
             } else {
                 $('.active').removeClass('active');
             }
+            _board.ui.hightlightCell(parseFloat($t.attr('id')), true);
         }
     }
 
@@ -258,7 +256,7 @@ Board.prototype.events = function(){
     $('.cell').on(activeEvent, onTileClick);
     $('.digitBtn').on(activeEvent, onNumberSelect);
     $('#btnSolve').on(activeEvent, function(){_board.solve()});
-    $('#btnNewGame').on(activeEvent, newGame)
+    $('#btnNewGame').on(activeEvent, newGame);
     $(window).on('resize', onResize)
         .on('valuesUpdated', _board.ui.update)
         .on('keydown', onKeyDown);

@@ -1,0 +1,17 @@
+.no3d {
+
+  .cell {
+    perspective:none;
+    &.active {
+      .cell-wrapper {
+        transform:scale(1.5);
+        transform-style:flat;
+      }
+      .back {
+        transform:none;
+      }
+    }
+
+  }
+
+}

@@ -66,6 +66,7 @@ header {
     text-transform:uppercase;
     transition:border-color .6s;
     &:hover {border-color:$highlight;cursor:pointer;}
+    .fa {display:none;}
   }
 
 }
@@ -108,6 +109,8 @@ section,.cell {
   padding-top:33.3%;
   border:1px solid $mainDark;
   perspective : 1000;
+  -webkit-perspective:1000;
+  -moz-perspective:1000;
   z-index:1;
 
   &.active {
@@ -117,6 +120,8 @@ section,.cell {
       z-index:5;
       box-shadow:0 0 3px 1px rgba(0,0,0,.2);
     }
+    .front{z-index:0;}
+    .back{z-index:100;}
   }
 
   &:hover, &.selected {

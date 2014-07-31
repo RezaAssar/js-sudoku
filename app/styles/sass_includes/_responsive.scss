@@ -3,23 +3,58 @@
   .wrapper{width:100%;height:auto;}
 }
 
-@media only screen
-and (max-width : 480px)
-and (orientation : portrait) {
-  #btnNewGame {
-    position:fixed;
-    bottom:3%;
-    left:50%;
-    margin-left:-75px;
-    width:150px;
-    text-align:center;
+@media only screen and (max-width : 480px) {
+
+  header {
+    .btn {
+      .fa {display:inline;}
+      span{display:none;}
+    }
   }
 
-}
+  .wrapper .cell {
+    -webkit-perspective: none;
+    perspective: none;
 
-@media only screen
-and (max-width : 480px) {
-  .cell .front .front-wrapper {
-    font-size:2rem;
+    .cell-wrapper {
+      -webkit-transform-style: initial;
+      transform-style: initial;
+    }
+
+    .front {
+      .front-wrapper {
+        font-size: 2rem;
+      }
+    }
+
+    &.active {
+      .cell-wrapper {
+        -webkit-transform: none;
+        transform: none;
+      }
+      .back {
+        z-index: 2
+      }
+    }
+
+    .back {
+      -webkit-transform: none;
+      transform: none;
+      z-index: 0;
+      position: fixed;
+      top: auto;
+      bottom: 10px;
+      left: 0;
+      height: 30px;
+      padding-left: 1%;
+      background:none;
+      .digitBtn {
+        background:#fff;
+        padding-top: 40px;
+        border: 1px solid $main;
+        border-style: none solid;
+        width: 11%;
+      }
+    }
   }
 }
