@@ -2,6 +2,8 @@
 
 A simple, mostly complete Sudoku game written for the browser.
 
+Link to built app - (http://mynd.us/judoku/)
+
 ###Stack###
 * Yeoman
 * Bower
