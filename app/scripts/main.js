@@ -13,11 +13,13 @@ Game.prototype.init = function(){
     var _game = this;
     _game.board.ui = _game.board.ui();
     _game.board.events();
-
-    $.getJSON('/scripts/boards.json').done(function(data){
-        var b = data.boards[Math.floor(Math.random() * (data.boards.length - 1))];
-        _game.board.loadData(b);
-    });
+//Changed because I couldn't get host to support .json
+//    $.getJSON('/scripts/boards.json').done(function(data){
+//        var b = data.boards[Math.floor(Math.random() * (data.boards.length - 1))];
+//        _game.board.loadData(b);
+//    });
+    var b = boards[Math.floor(Math.random() * (boards.length - 1))];
+     _game.board.loadData(b);
 };
 
 Board.prototype.loadData = function(data){
